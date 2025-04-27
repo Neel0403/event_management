@@ -27,7 +27,7 @@ export const EventProvider = ({ children }) => {
             }
         }
         fetchEvents();
-    }, [])
+    }, [events])
 
     const createEvent = async (eventData) => {
         try {
@@ -36,6 +36,7 @@ export const EventProvider = ({ children }) => {
             if (response.data) {
                 setEvents((event) => [...event, response.data])
             }
+            return response.data
         } catch (error) {
             console.error("Event creation failed", error)
             throw error
@@ -47,6 +48,8 @@ export const EventProvider = ({ children }) => {
         if (response.data) {
             setEvents((prevEvent) => prevEvent.map((event) => event.id === eventId ? { ...event, ...eventData } : event))
         }
+
+        return response.data
     }
     const deleteEvent = async (eventId) => {
         try {
@@ -55,6 +58,7 @@ export const EventProvider = ({ children }) => {
             if (response.data) {
                 setEvents((prevEvent) => prevEvent.filter((event) => event.id !== eventId))
             }
+            return true
         } catch (error) {
             console.error("Failed to delete event", error)
             throw error

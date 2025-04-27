@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Users, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Home = () => {
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
     const features = [
         {
             icon: <Calendar className="w-6 h-6" />,
@@ -20,26 +23,17 @@ const Home = () => {
         }
     ];
 
-    const upcomingEvents = [
-        {
-            title: "Tech Conference 2025",
-            date: "March 15-16, 2025",
-            attendees: "500+",
-            image: "/api/placeholder/400/200"
-        },
-        {
-            title: "Music Festival",
-            date: "April 1-3, 2025",
-            attendees: "2000+",
-            image: "/api/placeholder/400/200"
-        },
-        {
-            title: "Business Summit",
-            date: "May 20, 2025",
-            attendees: "300+",
-            image: "/api/placeholder/400/200"
-        }
-    ];
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await axios.get("http://localhost:8000/event/");
+                setUpcomingEvents(response.data.data.slice(0, 3));
+            } catch (error) {
+                toast.error("Failed to fetch events");
+            }
+        };
+        fetchEvents();
+    }, [])
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -95,11 +89,21 @@ const Home = () => {
                     <div className="grid md:grid-cols-3 gap-8">
                         {upcomingEvents.map((event, index) => (
                             <div key={index} className="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
+                                <img src={event.images ? event.images?.[0] : "/logo192.png"} alt={event.name} className="w-full h-48 object-cover" />
                                 <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                                    <p className="text-gray-600 mb-2">{event.date}</p>
-                                    <p className="text-blue-600">{event.attendees} attendees</p>
+                                    <h3 className="text-xl font-semibold mb-2">{event.name}</h3>
+                                    <p className="text-gray-600 mb-2">{
+                                        new Date(event.date).toLocaleDateString("en-US", {
+                                            weekday: "long",
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            timeZoneName: 'short'
+                                        })
+                                    }</p>
+                                    <p className="text-blue-600">{event.maxAttendees} attendees</p>
                                 </div>
                             </div>
                         ))}

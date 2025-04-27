@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { Sparkles, Menu, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Sparkles, Menu, X, User } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from "react-router-dom"
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  // console.log(user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (user !== null) {
+      console.log(user);
+    }
+  }, [user]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -12,7 +23,7 @@ const Navbar = () => {
     { name: 'Home', href: '/' },
     { name: 'Events', href: '/events' },
     { name: 'Features', href: '/features' },
-    { name: 'Pricing', href: '/pricing' },
+    { name: 'Dashboard', href: '/dashboard' },
     { name: 'About', href: '/about' },
   ];
 
@@ -42,18 +53,42 @@ const Navbar = () => {
               ))}
             </div>
             <div className="flex items-center space-x-3">
-              <a
-                href="/login"
-                className="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors"
-              >
-                Log in
-              </a>
-              <a
-                href="/register"
-                className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
-              >
-                Sign up
-              </a>
+
+              {user ? (
+                <>
+                  <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <User size={16} />
+                    </div>
+                    <span className="font-medium">
+                      {user ? `${user.firstName} ${` `} ${user.lastName}` : "Guest"}
+                    </span>
+                  </button>
+                </>
+              ) : (
+                <a
+                  href="/register"
+                  className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Sign up
+                </a>
+              )}
+              {user ?
+                <button
+                  onClick={async () => {
+                    const isLoggedOut = await logout()
+                    if (isLoggedOut)
+                      navigate("/")
+                  }}
+                  className="px-3 py-2 text-white font-medium bg-red-500 hover:bg-red-600 transition-colors rounded-xl"
+                >
+                  Log out
+                </button> : <a
+                  href="/login"
+                  className="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors"
+                >
+                  Log in
+                </a>}
             </div>
           </div>
 

@@ -10,7 +10,7 @@ const EventForm = ({ initialData, onSubmit, isLoading, isEditing }) => {
     time: '',
     location: '',
     maxAttendees: '',
-    ticketPrice: 0,
+    ticketPrice: null,
     virtualMeetingLink: ''
   });
   const [images, setImages] = useState([]);

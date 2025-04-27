@@ -6,32 +6,40 @@ import GuestLogin from './pages/auth/GuestLogin';
 import Dashboard from './pages/Dashboard';
 import CreateEvent from "./pages/events/CreateEvent";
 import EditEvent from './pages/events/EditEvent';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import EventList from './components/events/EventList';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
+import { useEffect } from 'react';
 
 function App() {
+  const navigate = useNavigate();
+  const { isLoggedIn, user } = useAuth();
+  console.log("USER:", user)
+  console.log("isLoggedIn:", isLoggedIn)
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate])
   return (
-    <Router>
-      <AuthProvider>
-        <ToastContainer />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-event" element={<CreateEvent />} />
-          <Route path="/edit-event/:id" element={<EditEvent />} />
-          <Route path="/events" element={<EventList />} />
-          <Route path="/guest-login" element={<GuestLogin />} />
-        </Routes>
-        <Footer />
-      </AuthProvider>
-    </Router>
+    <AuthProvider>
+      <ToastContainer />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={user ? <Dashboard /> : <Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/events/create" element={<CreateEvent />} />
+        <Route path="/events/edit-event/:id" element={<EditEvent />} />
+        <Route path="/events" element={<EventList />} />
+        <Route path="/guest-login" element={<GuestLogin />} />
+      </Routes>
+      <Footer />
+    </AuthProvider>
   );
 }
 

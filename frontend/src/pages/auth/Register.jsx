@@ -19,15 +19,15 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await register(formData);
-      if (response?.success) {
-        toast.success("Account created successfully");
+      if (response.success) {
+        toast.success(response.message);
         navigate('/dashboard');
       } else {
-        toast.error(response?.message || 'Registration failed. Please try again.');
+        toast.error(response.message || 'Registration failed. Please try again.');
       }
     } catch (error) {
       toast.error('Failed to create account. Please try again.');
-      return;
+      // return;
     }
   };
 
@@ -59,7 +59,7 @@ const Register = () => {
                 <input
                   type="text"
                   className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="John"
+                  // placeholder="John"
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   required
@@ -70,7 +70,7 @@ const Register = () => {
                 <input
                   type="text"
                   className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Doe"
+                  // placeholder="Doe"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   required
@@ -84,7 +84,7 @@ const Register = () => {
               <input
                 type="email"
                 className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="john@example.com"
+                // placeholder="john@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
@@ -98,7 +98,7 @@ const Register = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="••••••••"
+                  // placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required

@@ -1,78 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Calendar, Clock, Users, MapPin, Plus, Search, Filter, ChevronDown,
     Grid, List, ArrowRight, Sparkles, BellDot, User
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
+import { useEvent } from '../contexts/EventContext';
 
 const Dashboard = () => {
+    const { events, getEvents } = useEvent()
+    const { user } = useAuth()
     const [viewType, setViewType] = useState('grid');
     const [filterOpen, setFilterOpen] = useState(false);
     const [activeFilter, setActiveFilter] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
     // Example events data - in a real app, this would come from your API
-    const [events, setEvents] = useState([
-        {
-            id: 1,
-            name: "Annual Tech Conference",
-            description: "Join industry leaders for discussions on emerging technologies.",
-            category: "Technology",
-            date: new Date('2025-04-15'),
-            time: "09:00 AM - 05:00 PM",
-            location: "Convention Center, New York",
-            attendees: 246,
-            status: "upcoming",
-            isOwner: true
-        },
-        {
-            id: 2,
-            name: "Music Festival",
-            description: "A weekend of live performances from top artists.",
-            category: "Entertainment",
-            date: new Date('2025-05-22'),
-            time: "12:00 PM - 11:00 PM",
-            location: "Central Park, New York",
-            attendees: 1879,
-            status: "upcoming",
-            isOwner: true
-        },
-        {
-            id: 3,
-            name: "Charity Fundraiser",
-            description: "Help us raise funds for children's education.",
-            category: "Charity",
-            date: new Date('2025-03-10'),
-            time: "07:00 PM - 10:00 PM",
-            location: "Grand Hotel, Boston",
-            attendees: 158,
-            status: "past",
-            isOwner: true
-        },
-        {
-            id: 4,
-            name: "Marketing Workshop",
-            description: "Learn the latest digital marketing strategies.",
-            category: "Business",
-            date: new Date('2025-04-05'),
-            time: "10:00 AM - 03:00 PM",
-            location: "Business Center, Chicago",
-            attendees: 64,
-            status: "upcoming",
-            isOwner: false
-        },
-        {
-            id: 5,
-            name: "Product Launch",
-            description: "Be the first to see our newest innovations.",
-            category: "Technology",
-            date: new Date('2025-06-18'),
-            time: "02:00 PM - 04:00 PM",
-            location: "Virtual Event",
-            attendees: 312,
-            status: "draft",
-            isOwner: true
-        }
-    ]);
+    // const [events, setEvents] = useState([
+    //     {
+    //         id: 1,
+    //         name: "Annual Tech Conference",
+    //         description: "Join industry leaders for discussions on emerging technologies.",
+    //         category: "Technology",
+    //         date: new Date('2025-04-15'),
+    //         time: "09:00 AM - 05:00 PM",
+    //         location: "Convention Center, New York",
+    //         attendees: 246,
+    //         status: "upcoming",
+    //         isOwner: true
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Music Festival",
+    //         description: "A weekend of live performances from top artists.",
+    //         category: "Entertainment",
+    //         date: new Date('2025-05-22'),
+    //         time: "12:00 PM - 11:00 PM",
+    //         location: "Central Park, New York",
+    //         attendees: 1879,
+    //         status: "upcoming",
+    //         isOwner: true
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "Charity Fundraiser",
+    //         description: "Help us raise funds for children's education.",
+    //         category: "Charity",
+    //         date: new Date('2025-03-10'),
+    //         time: "07:00 PM - 10:00 PM",
+    //         location: "Grand Hotel, Boston",
+    //         attendees: 158,
+    //         status: "past",
+    //         isOwner: true
+    //     },
+    //     {
+    //         id: 4,
+    //         name: "Marketing Workshop",
+    //         description: "Learn the latest digital marketing strategies.",
+    //         category: "Business",
+    //         date: new Date('2025-04-05'),
+    //         time: "10:00 AM - 03:00 PM",
+    //         location: "Business Center, Chicago",
+    //         attendees: 64,
+    //         status: "upcoming",
+    //         isOwner: false
+    //     },
+    //     {
+    //         id: 5,
+    //         name: "Product Launch",
+    //         description: "Be the first to see our newest innovations.",
+    //         category: "Technology",
+    //         date: new Date('2025-06-18'),
+    //         time: "02:00 PM - 04:00 PM",
+    //         location: "Virtual Event",
+    //         attendees: 312,
+    //         status: "draft",
+    //         isOwner: true
+    //     }
+    // ]);
+
+    // const [events, setEvents] = useState({})
 
     // Filter events based on active filter and search query
     const filteredEvents = events.filter(event => {
@@ -102,7 +109,7 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="bg-white shadow-sm">
+            {/* <header className="bg-white shadow-sm">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -120,12 +127,12 @@ const Dashboard = () => {
                             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                                 <User size={16} />
                             </div>
-                            <span className="font-medium">John Doe</span>
+                            <span className="font-medium">{user ? `${user.firstName} ${` `} ${user.lastName}` : "Guest"}</span>
                             <ChevronDown size={16} />
                         </button>
                     </div>
                 </div>
-            </header>
+            </header> */}
 
             {/* Main Content */}
             <main className="container mx-auto px-4 py-8">
